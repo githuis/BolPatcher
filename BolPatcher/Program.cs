@@ -9,7 +9,9 @@ namespace BolPatcher
 		{
 			Application.Init ();
 			MainWindow win = new MainWindow ();
-			win.Show ();
+            
+           
+			win.ShowAll();
 			Application.Run ();
 		}
 	}
