@@ -26,10 +26,25 @@ public partial class MainWindow: Gtk.Window
         Title = "BolPatcher V 1.0b";
     }
 
+	private Label _label;
+
     private void AddWindowContent()
     {
-        Label label = new Label("Hello World");
+        _label = new Label("Hello World");
+		Entry entry = new Entry ();
+		Fixed fix = new Fixed ();
 
-        Add(label);
+		fix.Put (entry, 60, 100);
+		fix.Put (_label, 60, 40);
+		entry.Changed += OnChanged;
+
+		Add (fix);
+
     }
+
+	private void OnChanged(object s, EventArgs e)
+	{
+		_label.Text = ((Entry)s).Text;
+	}
+
 }
