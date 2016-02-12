@@ -69,6 +69,7 @@
     <Compile Include="VersionChecker.cs" />
     <Compile Include="GameLibrary.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="MainViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
