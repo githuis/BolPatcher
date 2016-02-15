@@ -1,62 +1,62 @@
 ﻿using System;
 using Gtk;
+using BolPatcher;
 
-public partial class MainWindow: Gtk.Window
+public partial class MainWindow : Gtk.Window
 {
-	private Label _label;
+    private Button _addGameWindowButton;
+    private Label _tempGameListLabel;
+    private MainViewModel _mainViewModel;
+    private AddGamesWindow _agWindow;
 
-	public MainWindow () : base (Gtk.WindowType.Toplevel)
-	{
+
+    public MainWindow() : base(Gtk.WindowType.Toplevel)
+    {
         //Build ();
 
         SetWindowStats();
         AddWindowContent();
+        _mainViewModel = new MainViewModel();
+        SetPosition(WindowPosition.Center);
+
+        Console.WriteLine("Hello");
+
     }
 
-	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
-	{
-		Application.Quit ();
-		a.RetVal = true;
-	}
+    protected void OnDeleteEvent(object sender, DeleteEventArgs a)
+    {
+        Application.Quit();
+        a.RetVal = true;
+    }
 
     private void SetWindowStats()
     {
         //Request size change
-        SetSizeRequest(300, 150);
+        SetSizeRequest(500, 500);
 
         //Change title
-        Title = "BolPatcher V 1.0b";
+        Title = "BolPatcher";
     }
-
-
 
     private void AddWindowContent()
     {
-        _label = new Label("Hello World");
-		Button btn = new Button ();
-		Entry entry = new Entry ();
-		Fixed fix = new Fixed ();
+        Fixed container = new Fixed();
+        _addGameWindowButton = new Button();
+        _addGameWindowButton.Label = "Add Game";
+        _addGameWindowButton.Clicked += OnAddGame;
 
-		btn.Label = "Add game";
-		btn.Clicked += OnAddGame;
+        _tempGameListLabel = new Label();
+        _tempGameListLabel.Text = "Games will show here once added";
 
-		fix.Put (entry, 60, 100);
-		fix.Put (_label, 60, 40);
-		fix.Put (btn, 60, 0);
-		entry.Changed += OnChanged;
+        container.Put(_addGameWindowButton, 20, 20);
+        container.Put(_tempGameListLabel, 20, 50);
 
-		Add (fix);
-
+        Add(container);
     }
 
-	private void OnChanged(object s, EventArgs e)
-	{
-		_label.Text = ((Entry)s).Text;
-	}
-
-	private void OnAddGame(object s, EventArgs e)
-	{
-		((Button)s).Label = "Fuck yes";
-	}
-
+    private void OnAddGame(object s, EventArgs e)
+    {
+        _agWindow = new AddGamesWindow();
+        _agWindow.ShowAll();
+    }
 }

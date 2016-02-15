@@ -60,6 +60,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddGamesWindow.cs" />
+    <Compile Include="AddGamesWindowModel.cs" />
     <Compile Include="gtk-gui\generated.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="gtk-gui\MainWindow.cs" />

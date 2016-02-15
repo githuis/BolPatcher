@@ -28,6 +28,7 @@ namespace BolPatcher
 			if (GameExistsInLibrary (title))
 				return;
 			_games.Add (new Game (title, path, version));
+            Console.WriteLine("Added a game");
 		}
 
 		public void RemoveGame(string title)

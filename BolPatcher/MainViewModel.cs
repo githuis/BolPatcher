@@ -5,15 +5,11 @@ namespace BolPatcher
 {
 	public class MainViewModel : INotifyPropertyChanged
 	{
+        public GameLibrary lib;
 		public MainViewModel ()
 		{
-			
-		}
-
-		public void AddGame()
-		{
-			GameLibrary.Instance.AddGame ("Yes", "c:/here", "1.0");
-		}
+			lib = GameLibrary.Instance;
+        }
 
 		public Game LoadGame(string title)
 		{
