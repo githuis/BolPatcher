@@ -11,11 +11,9 @@ namespace BolPatcher
 			MainWindow win = new MainWindow ();
 			VersionChecker vc = new VersionChecker ();
 
-
-            
-           
 			win.ShowAll();
 			Application.Run ();
+			Console.WriteLine ("S");
 		}
 	}
 }

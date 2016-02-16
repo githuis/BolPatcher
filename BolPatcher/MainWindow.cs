@@ -9,6 +9,8 @@ public partial class MainWindow : Gtk.Window
     private MainViewModel _mainViewModel;
     private AddGamesWindow _agWindow;
 
+	private bool _addGameWindowOpen = false;
+
 
     public MainWindow() : base(Gtk.WindowType.Toplevel)
     {
@@ -20,7 +22,6 @@ public partial class MainWindow : Gtk.Window
         SetPosition(WindowPosition.Center);
 
         Console.WriteLine("Hello");
-
     }
 
     protected void OnDeleteEvent(object sender, DeleteEventArgs a)
@@ -42,13 +43,12 @@ public partial class MainWindow : Gtk.Window
     {
         Fixed container = new Fixed();
         _addGameWindowButton = new Button();
-        _addGameWindowButton.Label = "Add Game";
         _addGameWindowButton.Clicked += OnAddGame;
 
         _tempGameListLabel = new Label();
         _tempGameListLabel.Text = "Games will show here once added";
 
-        container.Put(_addGameWindowButton, 20, 20);
+		container.Put (_addGameWindowButton, 20, 20);
         container.Put(_tempGameListLabel, 20, 50);
 
         Add(container);
@@ -56,7 +56,14 @@ public partial class MainWindow : Gtk.Window
 
     private void OnAddGame(object s, EventArgs e)
     {
+		if (_addGameWindowOpen)
+			return;
+		
         _agWindow = new AddGamesWindow();
         _agWindow.ShowAll();
+		_addGameWindowOpen = true;
+		((Button)s).Label = "Add Game";
     }
+
+
 }

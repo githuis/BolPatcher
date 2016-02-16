@@ -4,7 +4,7 @@ namespace BolPatcher
 {
 	public class Game
 	{
-		private string _path;
+		//private string _path;
 		private string _version;
 
 		public string Title {
@@ -15,7 +15,7 @@ namespace BolPatcher
 		public Game (string title, string path, string version)
 		{
 			Title = title;
-			_path = path;
+			//1_path = path;
 			_version = version;
 		}
 

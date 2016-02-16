@@ -14,7 +14,7 @@ namespace BolPatcher
             _agwModel = new AddGamesWindowModel();
             SetWindowStats();
             AddWindowContent();
-            SetPosition(WindowPosition.Center);
+            //SetPosition(WindowPosition.Center);
         }
 
         protected void OnDeleteEvent(object sender, DeleteEventArgs a)
