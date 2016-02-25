@@ -5,22 +5,24 @@ namespace BolPatcher
 {
     public partial class AddGamesWindow : Gtk.Window
     {
-        private Entry _titleBox;
+		private Entry _hostPathBox;
         private Entry _pathBox;
-        private AddGamesWindowModel _agwModel;
+		public AddGamesWindowViewModel _agwViewModel;
+		private BoolWrapper winOpen;
 
-        public AddGamesWindow() : base(Gtk.WindowType.Toplevel)
+
+		public AddGamesWindow(BoolWrapper windowOpen) : base(Gtk.WindowType.Toplevel)
         {
-            _agwModel = new AddGamesWindowModel();
+            _agwViewModel = new AddGamesWindowViewModel();
             SetWindowStats();
-            AddWindowContent();
-            //SetPosition(WindowPosition.Center);
+            AddWindowContent();            
+			winOpen = windowOpen;
         }
 
-        protected void OnDeleteEvent(object sender, DeleteEventArgs a)
-        {
-            
-        }
+		protected override void OnDestroyed ()
+		{
+			winOpen.Value = false;
+		}
 
         private void SetWindowStats()
         {
@@ -29,13 +31,16 @@ namespace BolPatcher
 
             //Change title
             Title = "Add Game - BolPatcher";
+
+			//Try to set window position
+			SetPosition(WindowPosition.Center);
         }
 
         private void AddWindowContent()
         {
-            Label label = new Label("Add games"), titleLabel = new Label("Game Title"), saveLabel = new Label("Save path");
+            Label label = new Label("Add game"), titleLabel = new Label("Host address"), saveLabel = new Label("Save path");
             Button btn = new Button();
-            _titleBox = new Entry();
+            _hostPathBox = new Entry();
             _pathBox = new Entry();
             Fixed fix = new Fixed();
 
@@ -44,7 +49,7 @@ namespace BolPatcher
 
             fix.Put(label, 5, 10);
             fix.Put(titleLabel, 5, 30);
-            fix.Put(_titleBox, 5, 50);
+            fix.Put(_hostPathBox, 5, 50);
             fix.Put(saveLabel, 5, 80);
             fix.Put(_pathBox, 5, 100);
             fix.Put(btn, 5, 140);
@@ -54,7 +59,7 @@ namespace BolPatcher
 
         private void OnAddGame(object s, EventArgs e)
         {
-            _agwModel.AddGame(_titleBox.Text, "g", "1");
+			_agwViewModel.AddGame (_pathBox.Text, _hostPathBox.Text);
         }
     }
 }

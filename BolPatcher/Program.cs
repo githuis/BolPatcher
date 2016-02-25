@@ -13,7 +13,6 @@ namespace BolPatcher
 
 			win.ShowAll();
 			Application.Run ();
-			Console.WriteLine ("S");
 		}
 	}
 }

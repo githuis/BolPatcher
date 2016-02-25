@@ -15,6 +15,8 @@ namespace BolPatcher
 
 		private List<Game> _games;
 
+		public IReadOnlyList<Game> Games { get { return _games.AsReadOnly(); }}
+
 		private GameLibrary ()
 		{
 			//Init list for storing games
@@ -23,26 +25,25 @@ namespace BolPatcher
 			//TODO Load library from save if any
 		}
 
-		public void AddGame(string title, string path, string version)
+		public void AddGame(string title, string path, string version, string hostPath)
 		{
-			if (GameExistsInLibrary (title))
+			Game g = new Game (title, path, version, hostPath);
+			if (GameExistsInLibrary (g))
 				return;
-			_games.Add (new Game (title, path, version));
-            Console.WriteLine("Added a game");
+			_games.Add (g);
 		}
 
-		public void RemoveGame(string title)
+		public void RemoveGame(Game g)
 		{
-			if (!GameExistsInLibrary (title))
+			if (!GameExistsInLibrary (g))
 				return;
 			
-			_games.Remove (FindGameInLibrary (title));
+			_games.Remove (FindGameInLibrary (g.Title));
 		}
 
-		public bool GameExistsInLibrary(string title)
+		public bool GameExistsInLibrary(Game g)
 		{
-			var game = _games.Where(x => x.Title == title);
-			if (game != null)
+			if (_games.Contains (g))
 				return true;
 			return false;
 		}

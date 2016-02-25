@@ -4,18 +4,20 @@ namespace BolPatcher
 {
 	public class Game
 	{
-		//private string _path;
+		private string _path;
 		private string _version;
+		private string _hostPath;
 
 		public string Title {
 			get;
 			private set;
 		}
 
-		public Game (string title, string path, string version)
+		public Game (string title, string path, string version, string hostPath)
 		{
 			Title = title;
-			//1_path = path;
+			_path = path;
+			_hostPath = hostPath;
 			_version = version;
 		}
 
@@ -24,6 +26,10 @@ namespace BolPatcher
 			return (_version == hostVersion);
 		}
 
+		public override string ToString ()
+		{
+			string s = (Title + " - Version: " + _version).Replace('\n', ' ');
+			return s;
+		}
 	}
 }
-

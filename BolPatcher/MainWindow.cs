@@ -1,15 +1,14 @@
 ﻿using System;
 using Gtk;
+using System.Linq;
 using BolPatcher;
 
 public partial class MainWindow : Gtk.Window
 {
-    private Button _addGameWindowButton;
     private Label _tempGameListLabel;
-    private MainViewModel _mainViewModel;
+    private MainWindowViewModel _mainViewModel;
     private AddGamesWindow _agWindow;
-
-	private bool _addGameWindowOpen = false;
+	private BoolWrapper _addGameWindowOpen = new BoolWrapper(false);
 
 
     public MainWindow() : base(Gtk.WindowType.Toplevel)
@@ -18,7 +17,7 @@ public partial class MainWindow : Gtk.Window
 
         SetWindowStats();
         AddWindowContent();
-        _mainViewModel = new MainViewModel();
+        _mainViewModel = new MainWindowViewModel();
         SetPosition(WindowPosition.Center);
 
         Console.WriteLine("Hello");
@@ -42,28 +41,34 @@ public partial class MainWindow : Gtk.Window
     private void AddWindowContent()
     {
         Fixed container = new Fixed();
-        _addGameWindowButton = new Button();
-        _addGameWindowButton.Clicked += OnAddGame;
+		Button addGameButton = new Button ();
+		addGameButton.Label = "Add Games";
+		addGameButton.Clicked += OnAddGameClicked;
 
         _tempGameListLabel = new Label();
         _tempGameListLabel.Text = "Games will show here once added";
 
-		container.Put (_addGameWindowButton, 20, 20);
+
         container.Put(_tempGameListLabel, 20, 50);
+		container.Put (addGameButton, 20, 20);
 
         Add(container);
     }
 
-    private void OnAddGame(object s, EventArgs e)
+    private void OnAddGameClicked(object s, EventArgs e)
     {
-		if (_addGameWindowOpen)
+		if (_addGameWindowOpen.Value)
 			return;
-		
-        _agWindow = new AddGamesWindow();
+
+		_addGameWindowOpen.Value = true;
+		_agWindow = new AddGamesWindow(_addGameWindowOpen);
+		_agWindow._agwViewModel.ListChanged += delegate {
+			_tempGameListLabel.Text = _mainViewModel.GameList.Aggregate(string.Empty, (c, d) => $"{c}{d}\n");
+		};
+
+		foreach (var game in _mainViewModel.GameList) {
+			Add (new Button{ Label = game.Title });
+		}
         _agWindow.ShowAll();
-		_addGameWindowOpen = true;
-		((Button)s).Label = "Add Game";
     }
-
-
 }
