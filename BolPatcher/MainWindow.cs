@@ -64,11 +64,16 @@ public partial class MainWindow : Gtk.Window
 		_agWindow = new AddGamesWindow(_addGameWindowOpen);
 		_agWindow._agwViewModel.ListChanged += delegate {
 			_tempGameListLabel.Text = _mainViewModel.GameList.Aggregate(string.Empty, (c, d) => $"{c}{d}\n");
+			int len = GameLibrary.Instance.Games.Count;
+			Game g = GameLibrary.Instance.Games[len-1];
+			//AddGameToMenu(GameLibrary.Instance.Games[len-1]);
+			Add(new MenuGameWidget(g));
+			ShowAll ();
 		};
 
-		foreach (var game in _mainViewModel.GameList) {
-			Add (new Button{ Label = game.Title });
-		}
+
         _agWindow.ShowAll();
+
     }
+
 }

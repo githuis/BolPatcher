@@ -74,6 +74,8 @@
     <Compile Include="BoolWrapper.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="model\WebHandler.cs" />
+    <Compile Include="View\MenuGameWidget.cs" />
+    <Compile Include="gtk-gui\BolPatcher.MenuGameWidget.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
