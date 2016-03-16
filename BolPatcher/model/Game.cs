@@ -21,6 +21,12 @@ namespace BolPatcher
 			_version = version;
 		}
 
+		public void Launch()
+		{
+			Console.WriteLine ("Game.cs - Error");
+			throw new NotImplementedException ();
+		}
+
 		public bool CompareVersion(string hostVersion)
 		{
 			return (_version == hostVersion);
@@ -28,8 +34,7 @@ namespace BolPatcher
 
 		public override string ToString ()
 		{
-			string s = (Title + " - Version: " + _version).Replace('\n', ' ');
-			return s;
+			return (Title + " - Version: " + _version).Replace('\n', ' ');
 		}
 	}
 }

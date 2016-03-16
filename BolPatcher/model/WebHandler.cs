@@ -20,7 +20,9 @@ namespace BolPatcher
 			try
 			{
 				return await webClient.DownloadDataTaskAsync(SetHostPath(hostPath) + "info.version");	
-			} catch (Exception) {
+			} 
+			catch (Exception)
+			{
 				return new byte[]{5};
 			}
 

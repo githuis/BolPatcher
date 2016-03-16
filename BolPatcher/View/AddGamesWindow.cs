@@ -6,7 +6,6 @@ namespace BolPatcher
     public partial class AddGamesWindow : Gtk.Window
     {
 		private Entry _hostPathBox;
-        private Entry _pathBox;
 		public AddGamesWindowViewModel _agwViewModel;
 		private BoolWrapper winOpen;
 
@@ -41,7 +40,6 @@ namespace BolPatcher
             Label label = new Label("Add game"), titleLabel = new Label("Host address"), saveLabel = new Label("Save path");
             Button btn = new Button();
             _hostPathBox = new Entry();
-            _pathBox = new Entry();
             Fixed fix = new Fixed();
 
             btn.Label = "Add game";
@@ -50,8 +48,6 @@ namespace BolPatcher
             fix.Put(label, 5, 10);
             fix.Put(titleLabel, 5, 30);
             fix.Put(_hostPathBox, 5, 50);
-            fix.Put(saveLabel, 5, 80);
-            fix.Put(_pathBox, 5, 100);
             fix.Put(btn, 5, 140);
 
             Add(fix);
@@ -59,7 +55,14 @@ namespace BolPatcher
 
         private void OnAddGame(object s, EventArgs e)
         {
-			_agwViewModel.AddGame (_pathBox.Text, _hostPathBox.Text);
+			try
+			{
+				_agwViewModel.AddGame (_hostPathBox.Text);	
+			} 
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
         }
     }
 }

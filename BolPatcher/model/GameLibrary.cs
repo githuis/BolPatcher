@@ -43,8 +43,22 @@ namespace BolPatcher
 
 		public bool GameExistsInLibrary(Game g)
 		{
-			if (_games.Contains (g))
-				return true;
+			try 
+			{
+				var game = FindGameInLibrary (g.Title);
+				if (g.Title == ((Game)game).Title)
+					return true;
+			}
+			catch (System.InvalidOperationException ex)
+			{
+				Console.WriteLine ("Invalid operation: " + ex.Message + ". This probably means no game with the title was found.");
+				return false;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine (ex.GetType ());
+			}
+
 			return false;
 		}
 
