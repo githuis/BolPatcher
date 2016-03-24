@@ -55,5 +55,14 @@ namespace BolPatcher
 			else
 				return curHostPath;
 		}
+
+		private void DownloadGameData(string hostPath)
+		{
+			webClient.DownloadFileAsync (hostPath, "gamedata.zip");
+			webClient.DownloadFileCompleted += (sender, e) => "";
+			//webClient.DownloadFile()	
+		}
+
+		private async Task<byte>
 	}
 }

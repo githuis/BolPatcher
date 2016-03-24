@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BolPatcher
 {
@@ -27,8 +26,8 @@ namespace BolPatcher
 			version =  webHandler.GetVersion (hostPath);
 			title = webHandler.GetTitle (hostPath);
 
-			GameLibrary.Instance.AddGame (title, GenerateGamePath(title), version, hostPath);
-			ListChanged?.Invoke (this, EventArgs.Empty);
+			if (GameLibrary.Instance.AddGame (title, GenerateGamePath(title), version, hostPath))
+				ListChanged?.Invoke (this, EventArgs.Empty);
 		}
 
 		private string GenerateGamePath(string title)

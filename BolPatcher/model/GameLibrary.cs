@@ -25,12 +25,13 @@ namespace BolPatcher
 			//TODO Load library from save if any
 		}
 
-		public void AddGame(string title, string path, string version, string hostPath)
+		public bool AddGame(string title, string path, string version, string hostPath)
 		{
 			Game g = new Game (title, path, version, hostPath);
 			if (GameExistsInLibrary (g))
-				return;
+				return false;
 			_games.Add (g);
+			return true;
 		}
 
 		public void RemoveGame(Game g)
