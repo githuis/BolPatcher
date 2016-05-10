@@ -8,7 +8,7 @@ namespace BolPatcher
 {
     public class AddGamesWindowViewModel
     {
-		public event EventHandler ListChanged;
+		public event EventHandler ListChanged, downloadCompleted;
 		private WebHandler webHandler;
 		StringBuilder sb;
 
@@ -17,17 +17,20 @@ namespace BolPatcher
 		{
 			webHandler = new WebHandler ();
 			sb = new StringBuilder ();
-			Console.WriteLine ("AddGAmesWindowViewModel.cs - webhandler made");
 		}
 
 		public void AddGame(string hostPath)
 		{
-			string title = "Error finding title", version = "also on internet";
+			string title = "Error finding title", version = "also error finding version";
 			version =  webHandler.GetVersion (hostPath);
 			title = webHandler.GetTitle (hostPath);
 
 			if (GameLibrary.Instance.AddGame (title, GenerateGamePath(title), version, hostPath))
+			{
+				
 				ListChanged?.Invoke (this, EventArgs.Empty);
+				webHandler.DownloadGameData (title, hostPath);
+			}
 		}
 
 		private string GenerateGamePath(string title)
@@ -37,5 +40,11 @@ namespace BolPatcher
 			Console.WriteLine (sb.ToString ());
 			return sb.ToString ();
 		}
+
+		public void AddDownloadCompletedEvent(Gtk.Button b)
+		{
+			webHandler.AddDownloadCompletedEvent (b);
+		}
+
     }
 }

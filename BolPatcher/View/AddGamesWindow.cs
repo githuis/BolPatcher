@@ -8,7 +8,7 @@ namespace BolPatcher
 		private Entry _hostPathBox;
 		public AddGamesWindowViewModel _agwViewModel;
 		private BoolWrapper winOpen;
-
+		public Button addGameButton;
 
 		public AddGamesWindow(BoolWrapper windowOpen) : base(Gtk.WindowType.Toplevel)
         {
@@ -38,17 +38,17 @@ namespace BolPatcher
         private void AddWindowContent()
         {
             Label label = new Label("Add game"), titleLabel = new Label("Host address"), saveLabel = new Label("Save path");
-            Button btn = new Button();
+            addGameButton = new Button();
             _hostPathBox = new Entry();
             Fixed fix = new Fixed();
 
-            btn.Label = "Add game";
-            btn.Clicked += OnAddGame;
+            addGameButton.Label = "Add game";
+            addGameButton.Clicked += OnAddGame;
 
             fix.Put(label, 5, 10);
             fix.Put(titleLabel, 5, 30);
             fix.Put(_hostPathBox, 5, 50);
-            fix.Put(btn, 5, 140);
+            fix.Put(addGameButton, 5, 140);
 
             Add(fix);
         }
@@ -57,6 +57,8 @@ namespace BolPatcher
         {
 			try
 			{
+				addGameButton.Label = "Downloading Game";
+				addGameButton.Sensitive = false;
 				_agwViewModel.AddGame (_hostPathBox.Text);	
 			} 
 			catch (Exception ex)

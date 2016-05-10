@@ -2,13 +2,15 @@
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
+using Gtk;
 
 namespace BolPatcher
 {
 	public class WebHandler
 	{
-		WebClient webClient;
+		private WebClient webClient;
 		string versionResult;
+		private Button btn;
 
 		public WebHandler ()
 		{
@@ -45,7 +47,12 @@ namespace BolPatcher
 
 		public string GetTitle(string hostPath)
 		{
-			return Encoding.UTF8.GetString(AcquireTitle (hostPath).Result);
+			return Strip(Encoding.UTF8.GetString (AcquireTitle (hostPath).Result), "\n");
+		}
+
+		private string Strip(string str, string toRemove)
+		{
+			return str.Replace (toRemove, "");
 		}
 
 		private string SetHostPath(string curHostPath)
@@ -56,13 +63,64 @@ namespace BolPatcher
 				return curHostPath;
 		}
 
-		private void DownloadGameData(string hostPath)
+		public void DownloadGameData(string title, string hostPath)
 		{
-			webClient.DownloadFileAsync (hostPath, "gamedata.zip");
-			webClient.DownloadFileCompleted += (sender, e) => "";
+			string gdata = "gamedata.zip";
+			Uri u = new Uri (hostPath + gdata);
+			Console.WriteLine ("Begin Download of " + title);
+			webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
+
+
+			webClient.DownloadFileAsync (u, PathController.Instance.CreateGameDir(title) + "/" + gdata);
+			webClient.DownloadFileCompleted += async (sender, e) =>
+			{
+			  await Task.Delay(500);
+				PathController.Instance.Extract(title);
+				Console.WriteLine("Download Finished, real yall");
+			};
+
 			//webClient.DownloadFile()	
 		}
 
-		private async Task<byte>
+		private void OnDownloadGameDataCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+		{
+			Console.WriteLine ("Download done");
+		}
+
+		private void WebClient_DownloadProgressChanged (object sender, DownloadProgressChangedEventArgs e)
+		{
+			double bytesIn = double.Parse(e.BytesReceived.ToString());
+			double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+			double percentage = bytesIn / totalBytes * 100;
+
+			Console.WriteLine ("Downloaded: " + int.Parse (Math.Truncate (percentage).ToString ()));
+		}
+
+		private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+		{
+			double bytesIn = double.Parse(e.BytesReceived.ToString());
+			double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+			double percentage = bytesIn / totalBytes * 100;
+
+			//progressBar1.Value = int.Parse(Math.Truncate(percentage).ToString());
+		}
+
+		public void AddDownloadCompletedEvent(Button b)
+		{
+			btn = b;
+			webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
+		}
+
+		private void RefreshButton()
+		{
+			btn.Sensitive = true;
+			btn.Label = "Add Game";
+		}
+
+		private void WebClient_DownloadFileCompleted (object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+		{
+			RefreshButton ();
+		}
+
 	}
 }

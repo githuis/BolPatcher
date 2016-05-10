@@ -16,7 +16,7 @@ namespace BolPatcher
 
 		public MenuGameWidget (Game game)
 		{
-			this.Build ();
+			//4this.Build ();
 
 			_game = game;
 

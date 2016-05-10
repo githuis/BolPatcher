@@ -30,7 +30,7 @@ namespace BolPatcher
 			Game g = new Game (title, path, version, hostPath);
 			if (GameExistsInLibrary (g))
 				return false;
-			_games.Add (g);
+			AddGame (g);
 			return true;
 		}
 
@@ -66,6 +66,12 @@ namespace BolPatcher
 		public Game FindGameInLibrary(string title)
 		{
 			return (Game) _games.First(x => x.Title == title);
+		}
+
+		private void AddGame(Game g)
+		{
+			_games.Add (g);
+
 		}
 			
 	}

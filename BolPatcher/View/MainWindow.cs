@@ -68,7 +68,8 @@ public partial class MainWindow : Gtk.Window
 
 		_addGameWindowOpen.Value = true;
 		_agWindow = new AddGamesWindow(_addGameWindowOpen);
-		_agWindow._agwViewModel.ListChanged += delegate {
+		_agWindow._agwViewModel.ListChanged += delegate
+		{
 			//_tempGameListLabel.Text = _mainViewModel.GameList.Aggregate(string.Empty, (c, d) => $"{c}{d}\n");
 			int len = GameLibrary.Instance.Games.Count;
 			Game g = GameLibrary.Instance.Games[len-1];
@@ -84,6 +85,8 @@ public partial class MainWindow : Gtk.Window
 
 			ShowAll ();
 		};
+
+		_agWindow._agwViewModel.AddDownloadCompletedEvent (_agWindow.addGameButton);
 			
         _agWindow.ShowAll();
     }
