@@ -92,6 +92,11 @@ namespace BolPatcher
 			Console.WriteLine ("Downloaded: " + int.Parse (Math.Truncate (percentage).ToString ()));
 		}
 
+		public void AddDownloadProgressEvent(Button b)
+		{
+			throw new NotImplementedException ();
+		}
+
 		public void AddDownloadCompletedEvent(Button b)
 		{
 			btn = b;
