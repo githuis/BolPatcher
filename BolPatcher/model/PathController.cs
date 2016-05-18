@@ -2,6 +2,7 @@
 using System.IO;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
+using BolPatcher.Internals;
 
 namespace BolPatcher
 {
@@ -35,6 +36,29 @@ namespace BolPatcher
 			Directory.CreateDirectory (path);
 
 			return path;
+
+		}
+
+		public void Unzip(string title)
+		{
+
+			try
+			{
+				using (var unzip = new Unzip(System.IO.Path.Combine(GamesPath, title, "gamedata.zip")))
+				{
+
+					foreach (var fileName in unzip.FileNames)
+					{
+						Console.WriteLine (fileName);
+					}
+
+					unzip.ExtractToDirectory (System.IO.Path.Combine (GamesPath, title));
+				}	
+			} 
+			catch (Exception ex) 
+			{
+				Console.WriteLine (ex.Message);
+			}
 
 		}
 			

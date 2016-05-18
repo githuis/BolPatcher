@@ -75,7 +75,8 @@ namespace BolPatcher
 			webClient.DownloadFileCompleted += async (sender, e) =>
 			{
 			  await Task.Delay(500);
-				PathController.Instance.Extract(title);
+				//PathController.Instance.Extract(title);
+				PathController.Instance.Unzip(title);
 				Console.WriteLine("Download Finished, real yall");
 			};
 

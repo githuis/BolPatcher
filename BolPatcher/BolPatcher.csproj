@@ -39,7 +39,6 @@
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
@@ -63,6 +62,7 @@
     <Compile Include="gtk-gui\generated.cs" />
     <Compile Include="gtk-gui\MainWindow.cs" />
     <Compile Include="gtk-gui\BolPatcher.MenuGameWidget.cs" />
+    <Compile Include="Internals\Unzip.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
