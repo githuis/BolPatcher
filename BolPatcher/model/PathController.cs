@@ -37,12 +37,14 @@ namespace BolPatcher
 
 		}
 
-		public void Unzip(string title)
+		public void UnzipAndDelete(string title)
 		{
 			using (var unzip = new Unzip(System.IO.Path.Combine(GamesPath, title, "gamedata.zip")))
 			{
 				unzip.ExtractToDirectory (System.IO.Path.Combine (GamesPath, title));
 			}	
+
+			File.Delete (System.IO.Path.Combine (GamesPath, title, "gamedata.zip"));
 		}
 	}
 }

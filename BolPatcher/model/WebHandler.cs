@@ -75,17 +75,12 @@ namespace BolPatcher
 			webClient.DownloadFileCompleted += async (sender, e) =>
 			{
 			  await Task.Delay(500);
-				//PathController.Instance.Extract(title);
-				PathController.Instance.Unzip(title);
-				Console.WriteLine("Download Finished, real yall");
+				PathController.Instance.UnzipAndDelete(title); // Unzip the file
+
+				//Console.WriteLine("Download Finished, real yall");
 			};
 
 			//webClient.DownloadFile()	
-		}
-
-		private void OnDownloadGameDataCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-		{
-			Console.WriteLine ("Download done");
 		}
 
 		private void WebClient_DownloadProgressChanged (object sender, DownloadProgressChangedEventArgs e)
@@ -95,15 +90,6 @@ namespace BolPatcher
 			double percentage = bytesIn / totalBytes * 100;
 
 			Console.WriteLine ("Downloaded: " + int.Parse (Math.Truncate (percentage).ToString ()));
-		}
-
-		private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-		{
-			double bytesIn = double.Parse(e.BytesReceived.ToString());
-			double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-			double percentage = bytesIn / totalBytes * 100;
-
-			//progressBar1.Value = int.Parse(Math.Truncate(percentage).ToString());
 		}
 
 		public void AddDownloadCompletedEvent(Button b)
