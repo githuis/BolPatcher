@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;
 using BolPatcher.Internals;
 
 namespace BolPatcher
@@ -41,81 +39,10 @@ namespace BolPatcher
 
 		public void Unzip(string title)
 		{
-
-			try
+			using (var unzip = new Unzip(System.IO.Path.Combine(GamesPath, title, "gamedata.zip")))
 			{
-				using (var unzip = new Unzip(System.IO.Path.Combine(GamesPath, title, "gamedata.zip")))
-				{
-
-					foreach (var fileName in unzip.FileNames)
-					{
-						Console.WriteLine (fileName);
-					}
-
-					unzip.ExtractToDirectory (System.IO.Path.Combine (GamesPath, title));
-				}	
-			} 
-			catch (Exception ex) 
-			{
-				Console.WriteLine (ex.Message);
-			}
-
-		}
-			
-		//https://github.com/icsharpcode/SharpZipLib/wiki/Zip-Samples#-unpack-a-zip-with-full-control-over-the-operation
-		public void Extract(string title)
-		{
-			ZipFile zf = null;
-
-			try
-			{
-				MakeFolderWritable(System.IO.Path.Combine(GamesPath, title));
-				FileStream fs = File.OpenRead( System.IO.Path.Combine(GamesPath, title, "gamedata.zip"));
-				zf = new ZipFile(fs);
-
-				foreach (ZipEntry zipEntry in zf)
-				{
-					//if(!zipEntry.IsFile) //Ignore directories
-					//{
-					//	continue;
-					//}	
-
-					String emptyFileName = zipEntry.Name;
-
-					byte[] buffer = new byte[4096];
-					Stream zipStream = zf.GetInputStream(zipEntry);
-
-					String fullZipToPath = System.IO.Path.Combine(GamesPath, title, emptyFileName);
-
-					//Console.WriteLine("Path list: " + GamesPath +"\n"+ GamesPath+title+"\n" + fullZipToPath);
-					//String directoryName = System.IO.Path.GetDirectoryName(fullZipToPath);
-					String directoryName = fullZipToPath;
-					if(directoryName.Length > 0)
-						Directory.CreateDirectory(directoryName);
-
-					using (FileStream streamWriter = File.Create(fullZipToPath))
-					{
-						StreamUtils.Copy(zipStream, streamWriter, buffer);
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine ("Failed to extract: " + ex.ToString() + " - " + ex.Message);
-			}
-			finally {
-				if (zf != null) {
-					zf.IsStreamOwner = true;
-					zf.Close ();
-				}
-			}
-		}
-
-		private void MakeFolderWritable(string folder)
-		{
-			System.IO.DirectoryInfo oDir = new System.IO.DirectoryInfo(folder);
-			oDir.Attributes = System.IO.FileAttributes.Normal;
-
+				unzip.ExtractToDirectory (System.IO.Path.Combine (GamesPath, title));
+			}	
 		}
 	}
 }
