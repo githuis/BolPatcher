@@ -73,6 +73,7 @@ public partial class MainWindow : Gtk.Window
 			//_tempGameListLabel.Text = _mainViewModel.GameList.Aggregate(string.Empty, (c, d) => $"{c}{d}\n");
 			int len = GameLibrary.Instance.Games.Count;
 			Game g = GameLibrary.Instance.Games[len-1];
+			DatabaseManager.Instance.Insert(g);
 			//AddGameToMenu(GameLibrary.Instance.Games[len-1]);
 			//Add(new MenuGameWidget(g));
 
@@ -103,7 +104,7 @@ public partial class MainWindow : Gtk.Window
 			_label = new Label {Text = _game.Title};
 			_button = new Button { Label = "Run" };
 			_button.Clicked += (sender, e) =>  {
-				_game.Launch();
+				System.Threading.Tasks.Task.Run (() => _game.Launch());
 			};
 
 			Put(_button, 0, 0);

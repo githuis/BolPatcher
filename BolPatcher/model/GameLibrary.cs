@@ -27,7 +27,12 @@ namespace BolPatcher
 
 		public bool AddGame(string title, string path, string version, string hostPath)
 		{
-			Game g = new Game (title, path, version, hostPath);
+			Game g = new Game{
+				Title = title,
+				Path = path,
+				Version = version,
+				HostPath = hostPath
+			};
 			if (GameExistsInLibrary (g))
 				return false;
 			AddGame (g);
@@ -71,7 +76,8 @@ namespace BolPatcher
 		private void AddGame(Game g)
 		{
 			_games.Add (g);
-
+			if(!DatabaseManager.Instance.Exists(g))
+				DatabaseManager.Instance.Insert (g);
 		}
 			
 	}
