@@ -8,7 +8,7 @@ namespace BolPatcher
 {
     public class AddGamesWindowViewModel
     {
-		public event EventHandler ListChanged, downloadCompleted;
+		public event EventHandler ListChanged;
 		private WebHandler webHandler;
 		StringBuilder sb;
 
@@ -35,10 +35,13 @@ namespace BolPatcher
 
 		private string GenerateGamePath(string title)
 		{
-			sb.Clear ();
-			sb.Append (PathController.Instance.GamesPath).Append ("/").Append (title);
-			Console.WriteLine (sb.ToString ());
-			return sb.ToString ();
+
+            return System.IO.Path.Combine(PathController.Instance.GamesPath, title);
+
+			//sb.Clear ();
+			//sb.Append (PathController.Instance.GamesPath).Append ("/").Append (title);
+			//Console.WriteLine (sb.ToString ());
+			//return sb.ToString ();
 		}
 
 		public void AddDownloadCompletedEvent(Gtk.Button b)

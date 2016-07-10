@@ -26,7 +26,7 @@ namespace BolPatcher
         private void SetWindowStats()
         {
             //Request size change
-            SetSizeRequest(200, 250);
+            SetSizeRequest(400, 250);
 
             //Change title
             Title = "Add Game - BolPatcher";
@@ -40,6 +40,7 @@ namespace BolPatcher
             Label label = new Label("Add game"), titleLabel = new Label("Host address"), saveLabel = new Label("Save path");
             addGameButton = new Button();
             _hostPathBox = new Entry();
+            _hostPathBox.SetSizeRequest(300, _hostPathBox.HeightRequest);
             Fixed fix = new Fixed();
 
             addGameButton.Label = "Add game";
@@ -47,7 +48,7 @@ namespace BolPatcher
 
             fix.Put(label, 5, 10);
             fix.Put(titleLabel, 5, 30);
-            fix.Put(_hostPathBox, 5, 50);
+            fix.Put(_hostPathBox, 5, 100);
             fix.Put(addGameButton, 5, 140);
 
             Add(fix);

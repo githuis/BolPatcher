@@ -21,8 +21,8 @@ namespace BolPatcher
 			{
 				
 				ProcessStartInfo start = new ProcessStartInfo ();
-				string filePattern = System.IO.Path.Combine(Path, Title + ".*");
-				string[] names = System.IO.Directory.GetFiles(Path, filePattern);
+				string filePattern = Title + ".*";
+                string[] names = Directory.GetFiles(Path, filePattern);
 
 				if(names.Length == 1)
 				{
@@ -30,8 +30,11 @@ namespace BolPatcher
 					start.FileName = names[0];
 				}
 				else if(names.Length < 1)
-					throw new ArgumentNullException();
-				else if(names.Length >= 2)
+                {
+                    throw new ArgumentNullException();
+
+                }
+                else if(names.Length >= 2)
 				{
 					throw new NotImplementedException();
 				}
@@ -47,13 +50,17 @@ namespace BolPatcher
 					exitCode = proc.ExitCode;
 				}
 			} 
-			catch (Exception ex)
-			{
-				Console.WriteLine ("Error running application, see error msg below " + ex.GetType().ToString());
-				Console.WriteLine (ex.Message);
-			}
+			//catch (ArgumentNullException ex)
+			//{
+			//	Console.WriteLine ("Error running application, see error msg below " + ex.GetType().ToString());
+			//	Console.WriteLine (ex.Message);
+			//}
+            catch (System.ComponentModel.Win32Exception ex)
+            {
+                Console.WriteLine("Attempted to run a non-windows application on windows.\nError message is: " + ex.Message);
+            }
 
-		}
+        }
 
 		public bool CompareVersion(string hostVersion)
 		{
