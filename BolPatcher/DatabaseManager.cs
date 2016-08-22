@@ -25,7 +25,8 @@ namespace BolPatcher
 
 		public void Insert(Game localGame)
 		{
-			_database.Insert(localGame);
+            if(!Exists(localGame))
+			    _database.Insert(localGame);
 		}
 
 		public bool Exists(Game game)
