@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using BolPatcher.model;
 
-namespace BolPatcher
+namespace BolPatcher.ViewModel
 {
 	public class MainWindowViewModel
 	{
-        public GameLibrary lib;
+        public GameLibrary Lib;
 
 		private string _gameListString;
 		public string GameListString
@@ -22,7 +22,7 @@ namespace BolPatcher
 
 		public MainWindowViewModel ()
 		{
-			lib = GameLibrary.Instance;
+			Lib = GameLibrary.Instance;
         }
 
 		public Game LoadGame(string title)

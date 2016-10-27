@@ -1,19 +1,19 @@
-﻿using System;
+﻿using System.IO;
 using System.Linq;
-using SQLite;
+using BolPatcher.model;
 
 namespace BolPatcher
 {
 	public sealed class DatabaseManager
 	{
 		private static DatabaseManager _instance;
-		private SQLiteConnection _database;
+		private readonly SqLiteConnection _database;
 		public static DatabaseManager Instance => _instance ?? (_instance = new DatabaseManager());
 
 		private DatabaseManager ()
 		{
-			string fileName = System.IO.Path.Combine(PathController.Instance.Path, "settigs.db");
-			_database = new SQLiteConnection(fileName);
+			string fileName = Path.Combine(PathController.Instance.Path, "settigs.db");
+			_database = new SqLiteConnection(fileName);
 			//_database.DropTable<Game>();
 			_database.CreateTable<Game>();
 

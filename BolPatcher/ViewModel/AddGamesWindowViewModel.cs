@@ -1,42 +1,42 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
+using BolPatcher.model;
+using Gtk;
 
-namespace BolPatcher
+namespace BolPatcher.ViewModel
 {
     public class AddGamesWindowViewModel
     {
 		public event EventHandler ListChanged;
-		private WebHandler webHandler;
-		StringBuilder sb;
+		private readonly WebHandler _webHandler;
+		StringBuilder _sb;
 
 
 		public AddGamesWindowViewModel()
 		{
-			webHandler = new WebHandler ();
-			sb = new StringBuilder ();
+			_webHandler = new WebHandler ();
+			_sb = new StringBuilder ();
 		}
 
 		public void AddGame(string hostPath)
 		{
 			string title = "Error finding title", version = "also error finding version";
-			version =  webHandler.GetVersion (hostPath);
-			title = webHandler.GetTitle (hostPath);
+			version =  _webHandler.GetVersion (hostPath);
+			title = _webHandler.GetTitle (hostPath);
 
 			if (GameLibrary.Instance.AddGame (title, GenerateGamePath(title), version, hostPath))
 			{
 				
 				ListChanged?.Invoke (this, EventArgs.Empty);
-				webHandler.DownloadGameData (title, hostPath);
+				_webHandler.DownloadGameData (title, hostPath);
 			}
 		}
 
 		private string GenerateGamePath(string title)
 		{
 
-            return System.IO.Path.Combine(PathController.Instance.GamesPath, title);
+            return Path.Combine(PathController.Instance.GamesPath, title);
 
 			//sb.Clear ();
 			//sb.Append (PathController.Instance.GamesPath).Append ("/").Append (title);
@@ -44,9 +44,9 @@ namespace BolPatcher
 			//return sb.ToString ();
 		}
 
-		public void AddDownloadCompletedEvent(Gtk.Button b)
+		public void AddDownloadCompletedEvent(Button b)
 		{
-			webHandler.AddDownloadCompletedEvent (b);
+			_webHandler.AddDownloadCompletedEvent (b);
 		}
 
     }

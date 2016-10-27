@@ -1,26 +1,28 @@
 ﻿using System;
+using BolPatcher.model;
+using BolPatcher.ViewModel;
 using Gtk;
 
-namespace BolPatcher
+namespace BolPatcher.View
 {
-    public partial class AddGamesWindow : Gtk.Window
+    public class AddGamesWindow : Window
     {
 		private Entry _hostPathBox;
-		public AddGamesWindowViewModel _agwViewModel;
-		private BoolWrapper winOpen;
-		public Button addGameButton;
+		public AddGamesWindowViewModel AgwViewModel;
+		private readonly BoolWrapper _winOpen;
+		public Button AddGameButton;
 
-		public AddGamesWindow(BoolWrapper windowOpen) : base(Gtk.WindowType.Toplevel)
+		public AddGamesWindow(BoolWrapper windowOpen) : base(WindowType.Toplevel)
         {
-            _agwViewModel = new AddGamesWindowViewModel();
+            AgwViewModel = new AddGamesWindowViewModel();
             SetWindowStats();
             AddWindowContent();            
-			winOpen = windowOpen;
+			_winOpen = windowOpen;
         }
 
 		protected override void OnDestroyed ()
 		{
-			winOpen.Value = false;
+			_winOpen.Value = false;
 		}
 
         private void SetWindowStats()
@@ -38,18 +40,18 @@ namespace BolPatcher
         private void AddWindowContent()
         {
             Label label = new Label("Add game"), titleLabel = new Label("Host address"), saveLabel = new Label("Save path");
-            addGameButton = new Button();
+            AddGameButton = new Button();
             _hostPathBox = new Entry();
             _hostPathBox.SetSizeRequest(300, _hostPathBox.HeightRequest);
             Fixed fix = new Fixed();
 
-            addGameButton.Label = "Add game";
-            addGameButton.Clicked += OnAddGame;
+            AddGameButton.Label = "Add game";
+            AddGameButton.Clicked += OnAddGame;
 
             fix.Put(label, 5, 10);
             fix.Put(titleLabel, 5, 30);
             fix.Put(_hostPathBox, 5, 100);
-            fix.Put(addGameButton, 5, 140);
+            fix.Put(AddGameButton, 5, 140);
 
             Add(fix);
         }
@@ -58,9 +60,9 @@ namespace BolPatcher
         {
 			try
 			{
-				addGameButton.Label = "Downloading Game";
-				addGameButton.Sensitive = false;
-				_agwViewModel.AddGame (_hostPathBox.Text);	
+				AddGameButton.Label = "Downloading Game";
+				AddGameButton.Sensitive = false;
+				AgwViewModel.AddGame (_hostPathBox.Text);	
 			} 
 			catch (Exception ex)
 			{

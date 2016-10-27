@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BolPatcher
+namespace BolPatcher.model
 {
 	public sealed class GameLibrary
 	{
@@ -13,7 +13,7 @@ namespace BolPatcher
 
 		private static GameLibrary _instance;
 
-		private List<Game> _games;
+		private readonly List<Game> _games;
 
 		public IReadOnlyList<Game> Games { get { return _games.AsReadOnly(); }}
 
@@ -52,10 +52,10 @@ namespace BolPatcher
 			try 
 			{
 				var game = FindGameInLibrary (g.Title);
-				if (g.Title == ((Game)game).Title)
+				if (g.Title == game.Title)
 					return true;
 			}
-			catch (System.InvalidOperationException ex)
+			catch (InvalidOperationException ex)
 			{
 				Console.WriteLine ("Invalid operation: " + ex.Message + ". This probably means no game with the title was found.");
 				return false;
@@ -70,7 +70,7 @@ namespace BolPatcher
 
 		public Game FindGameInLibrary(string title)
 		{
-			return (Game) _games.First(x => x.Title == title);
+			return _games.First(x => x.Title == title);
 		}
 
 		private void AddGame(Game g)
