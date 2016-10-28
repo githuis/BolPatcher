@@ -28,27 +28,27 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SQLite
+namespace BolPatcher
 {
-	public partial class SQLiteAsyncConnection
+	public partial class SqLiteAsyncConnection
 	{
-		SQLiteConnectionString _connectionString;
-        SQLiteOpenFlags _openFlags;
+	    readonly SqLiteConnectionString _connectionString;
+	    readonly SqLiteOpenFlags _openFlags;
 
-        public SQLiteAsyncConnection(string databasePath, bool storeDateTimeAsTicks = false)
-            : this(databasePath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create, storeDateTimeAsTicks)
+        public SqLiteAsyncConnection(string databasePath, bool storeDateTimeAsTicks = false)
+            : this(databasePath, SqLiteOpenFlags.ReadWrite | SqLiteOpenFlags.Create, storeDateTimeAsTicks)
         {
         }
         
-        public SQLiteAsyncConnection(string databasePath, SQLiteOpenFlags openFlags, bool storeDateTimeAsTicks = false)
+        public SqLiteAsyncConnection(string databasePath, SqLiteOpenFlags openFlags, bool storeDateTimeAsTicks = false)
         {
             _openFlags = openFlags;
-            _connectionString = new SQLiteConnectionString(databasePath, storeDateTimeAsTicks);
+            _connectionString = new SqLiteConnectionString(databasePath, storeDateTimeAsTicks);
         }
 
-		SQLiteConnectionWithLock GetConnection ()
+		SqLiteConnectionWithLock GetConnection ()
 		{
-			return SQLiteConnectionPool.Shared.GetConnection (_connectionString, _openFlags);
+			return SqLiteConnectionPool.Shared.GetConnection (_connectionString, _openFlags);
 		}
 
 		public Task<CreateTablesResult> CreateTableAsync<T> ()
@@ -226,7 +226,7 @@ namespace SQLite
 		}
 
         [Obsolete("Will cause a deadlock if any call in action ends up in a different thread. Use RunInTransactionAsync(Action<SQLiteConnection>) instead.")]
-		public Task RunInTransactionAsync (Action<SQLiteAsyncConnection> action)
+		public Task RunInTransactionAsync (Action<SqLiteAsyncConnection> action)
 		{
 			return Task.Factory.StartNew (() => {
 				var conn = this.GetConnection ();
@@ -244,7 +244,7 @@ namespace SQLite
 			});
 		}
 
-        public Task RunInTransactionAsync(Action<SQLiteConnection> action)
+        public Task RunInTransactionAsync(Action<SqLiteConnection> action)
         {
             return Task.Factory.StartNew(() =>
             {
@@ -307,7 +307,7 @@ namespace SQLite
 	public class AsyncTableQuery<T>
 		where T : new ()
 	{
-		TableQuery<T> _innerQuery;
+	    readonly TableQuery<T> _innerQuery;
 
 		public AsyncTableQuery (TableQuery<T> innerQuery)
 		{
@@ -329,20 +329,20 @@ namespace SQLite
 			return new AsyncTableQuery<T> (_innerQuery.Take (n));
 		}
 
-		public AsyncTableQuery<T> OrderBy<U> (Expression<Func<T, U>> orderExpr)
+		public AsyncTableQuery<T> OrderBy<TU> (Expression<Func<T, TU>> orderExpr)
 		{
-			return new AsyncTableQuery<T> (_innerQuery.OrderBy<U> (orderExpr));
+			return new AsyncTableQuery<T> (_innerQuery.OrderBy<TU> (orderExpr));
 		}
 
-		public AsyncTableQuery<T> OrderByDescending<U> (Expression<Func<T, U>> orderExpr)
+		public AsyncTableQuery<T> OrderByDescending<TU> (Expression<Func<T, TU>> orderExpr)
 		{
-			return new AsyncTableQuery<T> (_innerQuery.OrderByDescending<U> (orderExpr));
+			return new AsyncTableQuery<T> (_innerQuery.OrderByDescending<TU> (orderExpr));
 		}
 
 		public Task<List<T>> ToListAsync ()
 		{
 			return Task.Factory.StartNew (() => {
-				using (((SQLiteConnectionWithLock)_innerQuery.Connection).Lock ()) {
+				using (((SqLiteConnectionWithLock)_innerQuery.Connection).Lock ()) {
 					return _innerQuery.ToList ();
 				}
 			});
@@ -351,7 +351,7 @@ namespace SQLite
 		public Task<int> CountAsync ()
 		{
 			return Task.Factory.StartNew (() => {
-				using (((SQLiteConnectionWithLock)_innerQuery.Connection).Lock ()) {
+				using (((SqLiteConnectionWithLock)_innerQuery.Connection).Lock ()) {
 					return _innerQuery.Count ();
 				}
 			});
@@ -360,7 +360,7 @@ namespace SQLite
 		public Task<T> ElementAtAsync (int index)
 		{
 			return Task.Factory.StartNew (() => {
-				using (((SQLiteConnectionWithLock)_innerQuery.Connection).Lock ()) {
+				using (((SqLiteConnectionWithLock)_innerQuery.Connection).Lock ()) {
 					return _innerQuery.ElementAt (index);
 				}
 			});
@@ -369,7 +369,7 @@ namespace SQLite
 		public Task<T> FirstAsync ()
 		{
 			return Task<T>.Factory.StartNew(() => {
-				using (((SQLiteConnectionWithLock)_innerQuery.Connection).Lock ()) {
+				using (((SqLiteConnectionWithLock)_innerQuery.Connection).Lock ()) {
 					return _innerQuery.First ();
 				}
 			});
@@ -378,7 +378,7 @@ namespace SQLite
 		public Task<T> FirstOrDefaultAsync ()
 		{
 			return Task<T>.Factory.StartNew(() => {
-				using (((SQLiteConnectionWithLock)_innerQuery.Connection).Lock ()) {
+				using (((SqLiteConnectionWithLock)_innerQuery.Connection).Lock ()) {
 					return _innerQuery.FirstOrDefault ();
 				}
 			});
@@ -395,17 +395,17 @@ namespace SQLite
 		}
 	}
 
-	class SQLiteConnectionPool
+	class SqLiteConnectionPool
 	{
 		class Entry
 		{
-			public SQLiteConnectionString ConnectionString { get; private set; }
-			public SQLiteConnectionWithLock Connection { get; private set; }
+			public SqLiteConnectionString ConnectionString { get; private set; }
+			public SqLiteConnectionWithLock Connection { get; private set; }
 
-            public Entry (SQLiteConnectionString connectionString, SQLiteOpenFlags openFlags)
+            public Entry (SqLiteConnectionString connectionString, SqLiteOpenFlags openFlags)
 			{
 				ConnectionString = connectionString;
-				Connection = new SQLiteConnectionWithLock (connectionString, openFlags);
+				Connection = new SqLiteConnectionWithLock (connectionString, openFlags);
 			}
 
 			public void OnApplicationSuspended ()
@@ -418,12 +418,12 @@ namespace SQLite
 		readonly Dictionary<string, Entry> _entries = new Dictionary<string, Entry> ();
 		readonly object _entriesLock = new object ();
 
-		static readonly SQLiteConnectionPool _shared = new SQLiteConnectionPool ();
+		static readonly SqLiteConnectionPool _shared = new SqLiteConnectionPool ();
 
 		/// <summary>
 		/// Gets the singleton instance of the connection tool.
 		/// </summary>
-		public static SQLiteConnectionPool Shared
+		public static SqLiteConnectionPool Shared
 		{
 			get
 			{
@@ -431,7 +431,7 @@ namespace SQLite
 			}
 		}
 
-		public SQLiteConnectionWithLock GetConnection (SQLiteConnectionString connectionString, SQLiteOpenFlags openFlags)
+		public SqLiteConnectionWithLock GetConnection (SqLiteConnectionString connectionString, SqLiteOpenFlags openFlags)
 		{
 			lock (_entriesLock) {
 				Entry entry;
@@ -469,11 +469,11 @@ namespace SQLite
 		}
 	}
 
-	class SQLiteConnectionWithLock : SQLiteConnection
+	class SqLiteConnectionWithLock : SqLiteConnection
 	{
 		readonly object _lockPoint = new object ();
 
-        public SQLiteConnectionWithLock (SQLiteConnectionString connectionString, SQLiteOpenFlags openFlags)
+        public SqLiteConnectionWithLock (SqLiteConnectionString connectionString, SqLiteOpenFlags openFlags)
 			: base (connectionString.DatabasePath, openFlags, connectionString.StoreDateTimeAsTicks)
 		{
 		}
@@ -485,7 +485,7 @@ namespace SQLite
 
 		private class LockWrapper : IDisposable
 		{
-			object _lockPoint;
+		    readonly object _lockPoint;
 
 			public LockWrapper (object lockPoint)
 			{

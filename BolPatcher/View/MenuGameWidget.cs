@@ -1,10 +1,11 @@
-﻿using System;
+﻿using System.ComponentModel;
+using BolPatcher.model;
 using Gtk;
 
-namespace BolPatcher
+namespace BolPatcher.View
 {
-	[System.ComponentModel.ToolboxItem (true)]
-	public partial class MenuGameWidget : Gtk.Bin
+	[ToolboxItem (true)]
+	public class MenuGameWidget : Bin
 	{
 		private Button _launchButton;
 		private Button _updateButton;
@@ -12,7 +13,7 @@ namespace BolPatcher
 		private Label _infoLabel;
 		private Fixed _fix;
 
-		private Game _game;
+		private readonly Game _game;
 
 		public MenuGameWidget (Game game)
 		{

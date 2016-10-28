@@ -1,17 +1,10 @@
-﻿using System;
-
-namespace BolPatcher
+﻿namespace BolPatcher.model
 {
 	public class VersionChecker
 	{
 		private string _localPath;
 
-		public VersionChecker ()
-		{
-			
-		}
-
-		public void SetLocalPath(string path)
+	    public void SetLocalPath(string path)
 		{
 			_localPath = path;
 		}

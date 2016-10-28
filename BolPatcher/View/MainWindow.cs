@@ -1,115 +1,120 @@
 ﻿using System;
-using Gtk;
-using System.Linq;
 using System.Collections.Generic;
-using BolPatcher;
+using System.Threading.Tasks;
+using BolPatcher.model;
+using BolPatcher.ViewModel;
+using Gtk;
 
-public partial class MainWindow : Gtk.Window
+namespace BolPatcher.View
 {
-    private Label _tempGameListLabel;
-    private MainWindowViewModel _mainViewModel;
-    private AddGamesWindow _agWindow;
-	private BoolWrapper _addGameWindowOpen = new BoolWrapper(false);
-
-	private Fixed container;
-	private int height = 100, width = 40;
-
-	private List<Button> btns = new List<Button>();
-
-
-    public MainWindow() : base(Gtk.WindowType.Toplevel)
+    public partial class MainWindow : Window
     {
-        //Build ();
+        private Label _tempGameListLabel;
+        private MainWindowViewModel _mainViewModel;
+        private AddGamesWindow _agWindow;
+        private readonly BoolWrapper _addGameWindowOpen = new BoolWrapper(false);
 
-        SetWindowStats();
-        AddWindowContent();
-        _mainViewModel = new MainWindowViewModel();
-        SetPosition(WindowPosition.Center);
+        private Fixed _container;
+        private int _height = 100;
+        private readonly int _width = 40;
 
-        Console.WriteLine("Hello");
-    }
-
-    protected void OnDeleteEvent(object sender, DeleteEventArgs a)
-    {
-        Application.Quit();
-        a.RetVal = true;
-    }
-
-    private void SetWindowStats()
-    {
-        //Request size change
-        SetSizeRequest(500, 500);
-
-        //Change title
-        Title = "BolPatcher";
-    }
-
-    private void AddWindowContent()
-    {
-		container = new Fixed ();
-		Button addGameButton = new Button ();
-		addGameButton.Label = "Add Games";
-		addGameButton.Clicked += OnAddGameClicked;
-
-        _tempGameListLabel = new Label();
-        _tempGameListLabel.Text = "Games will show here once added";
+        private List<Button> _btns = new List<Button>();
 
 
-        container.Put(_tempGameListLabel, 20, 50);
-		container.Put (addGameButton, 20, 20);
+        public MainWindow() : base(WindowType.Toplevel)
+        {
+            //Build ();
 
-        Add(container);
-    }
+            SetWindowStats();
+            AddWindowContent();
+            _mainViewModel = new MainWindowViewModel();
+            SetPosition(WindowPosition.Center);
+            Destroyed += (s, e) => Environment.Exit(0);
+            Console.WriteLine("Hello");
+        }
 
-    private void OnAddGameClicked(object s, EventArgs e)
-    {
-		if (_addGameWindowOpen.Value)
-			return;
+        protected void OnDeleteEvent(object sender, DeleteEventArgs a)
+        {
+            Application.Quit();
+            a.RetVal = true;
+        }
 
-		_addGameWindowOpen.Value = true;
-		_agWindow = new AddGamesWindow(_addGameWindowOpen);
-		_agWindow._agwViewModel.ListChanged += delegate
-		{
-			//_tempGameListLabel.Text = _mainViewModel.GameList.Aggregate(string.Empty, (c, d) => $"{c}{d}\n");
-			int len = GameLibrary.Instance.Games.Count;
-			Game g = GameLibrary.Instance.Games[len-1];
-			DatabaseManager.Instance.Insert(g);
-			//AddGameToMenu(GameLibrary.Instance.Games[len-1]);
-			//Add(new MenuGameWidget(g));
+        private void SetWindowStats()
+        {
+            //Request size change
+            SetSizeRequest(500, 500);
 
-			//btns.Add(new Button(){Label = "Gaem"});
+            //Change title
+            Title = "BolPatcher";
+        }
 
-			var gameFix = new MyFixed(g);
-			container.Put(gameFix, width, height);
-			height += 40;
+        private void AddWindowContent()
+        {
+            _container = new Fixed ();
+            Button addGameButton = new Button ();
+            addGameButton.Label = "Add Games";
+            addGameButton.Clicked += OnAddGameClicked;
+
+            _tempGameListLabel = new Label();
+            _tempGameListLabel.Text = "Games will show here once added";
 
 
-			ShowAll ();
-		};
+            _container.Put(_tempGameListLabel, 20, 50);
+            _container.Put (addGameButton, 20, 20);
 
-		_agWindow._agwViewModel.AddDownloadCompletedEvent (_agWindow.addGameButton);
+            Add(_container);
+        }
+
+        private void OnAddGameClicked(object s, EventArgs e)
+        {
+            if (_addGameWindowOpen.Value)
+                return;
+
+            _addGameWindowOpen.Value = true;
+            _agWindow = new AddGamesWindow(_addGameWindowOpen);
+            _agWindow.AgwViewModel.ListChanged += delegate
+            {
+                //_tempGameListLabel.Text = _mainViewModel.GameList.Aggregate(string.Empty, (c, d) => $"{c}{d}\n");
+                int len = GameLibrary.Instance.Games.Count;
+                Game g = GameLibrary.Instance.Games[len-1];
+                DatabaseManager.Instance.Insert(g);
+                //AddGameToMenu(GameLibrary.Instance.Games[len-1]);
+                //Add(new MenuGameWidget(g));
+
+                //btns.Add(new Button(){Label = "Gaem"});
+
+                var gameFix = new MyFixed(g);
+                _container.Put(gameFix, _width, _height);
+                _height += 40;
+
+
+                ShowAll ();
+            };
+
+            _agWindow.AgwViewModel.AddDownloadCompletedEvent (_agWindow.AddGameButton);
 			
-        _agWindow.ShowAll();
-    }
+            _agWindow.ShowAll();
+        }
 
-	public class MyFixed : Fixed{
-		private Label _label;
-		private Button _button;
-		private readonly Game _game;
+        public class MyFixed : Fixed{
+            private readonly Label _label;
+            private readonly Button _button;
+            private readonly Game _game;
 
-		public MyFixed (Game game)
-		{
-			_game = game;
+            public MyFixed (Game game)
+            {
+                _game = game;
 
-			_label = new Label {Text = _game.Title};
-			_button = new Button { Label = "Run" };
-			_button.Clicked += (sender, e) =>  {
-				System.Threading.Tasks.Task.Run (() => _game.Launch());
-			};
+                _label = new Label {Text = _game.Title};
+                _button = new Button { Label = "Run" };
+                _button.Clicked += (sender, e) =>  {
+                    Task.Run (() => _game.Launch());
+                };
 
-			Put(_button, 0, 0);
-			Put(_label, 50, 0);
+                Put(_button, 0, 0);
+                Put(_label, 50, 0);
 			
-		}
-	}
+            }
+        }
+    }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BolPatcher
+﻿namespace BolPatcher.model
 {
 	public class BoolWrapper
 	{

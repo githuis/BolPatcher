@@ -1,12 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 
-namespace BolPatcher
+namespace BolPatcher.model
 {
 	public class Game
 	{
-		[SQLite.PrimaryKey, SQLite.AutoIncrement]
+		[PrimaryKey, AutoIncrement]
 		public int Id { get; private set; }
 		public string Title { get; set;}
 		public string Path { get; set;}
@@ -26,7 +27,7 @@ namespace BolPatcher
 
 				if(names.Length == 1)
 				{
-					System.IO.File.SetAttributes(names[0], (FileAttributes)((int) File.GetAttributes(names[0]) | 0x80000000));
+					File.SetAttributes(names[0], (FileAttributes)((int) File.GetAttributes(names[0]) | 0x80000000));
 					start.FileName = names[0];
 				}
 				else if(names.Length < 1)
@@ -55,7 +56,7 @@ namespace BolPatcher
 			//	Console.WriteLine ("Error running application, see error msg below " + ex.GetType().ToString());
 			//	Console.WriteLine (ex.Message);
 			//}
-            catch (System.ComponentModel.Win32Exception ex)
+            catch (Win32Exception ex)
             {
                 Console.WriteLine("Attempted to run a non-windows application on windows.\nError message is: " + ex.Message);
             }

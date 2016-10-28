@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BolPatcher.model;
+using BolPatcher.View;
 using Gtk;
 
 namespace BolPatcher
